@@ -19,7 +19,7 @@
             <div class="text-3xl p-3 bg-indigo-500/10 border border-indigo-500/20 rounded-xl shadow-lg shadow-indigo-500/5">🕳️</div>
             <div>
                 <h2 class="text-2xl font-black text-white tracking-wide">Heuristic Pothole Surveyor Matrix</h2>
-                <p class="text-xs text-slate-400 mt-0.5 font-mono text-indigo-400/80">Active Live Bridge Target: asrcoddeploy/obj3pot (Gradio Engine)</p>
+                <p class="text-xs text-slate-400 mt-0.5 font-mono text-indigo-400/80">Active Live Bridge Target: asrcoddeploy/pothole-detector-advanced (/detect_potholes)</p>
             </div>
         </div>
 
@@ -103,16 +103,16 @@
             loadingOverlay.classList.remove('hidden');
 
             try {
-                // 1. Establish real-time websocket handshake query lane to your running space slot
-                const apiPipeline = await Client.connect("asrcoddeploy/obj3pot");
+                // 1. Handshake link pointing to your actual updated space address
+                const apiPipeline = await Client.connect("asrcoddeploy/pothole-detector-advanced");
                 
-                // 2. Dispatch payload package down your python function mapping signature: [image, conf_threshold]
-                const response = await apiPipeline.predict(0, [
-                    file, 	                     // Maps directly to 'image' PIL file parameter
-                    parseFloat(confSlider.value) // Maps directly to 'conf_threshold' float parameter
+                // 2. Dispatch parameters utilizing the exact named route endpoint string: "/detect_potholes"
+                const response = await apiPipeline.predict("/detect_potholes", [
+                    file, 	                     // Parameters element [0]: image filepath
+                    parseFloat(confSlider.value) // Parameters element [1]: conf_threshold float
                 ]);
 
-                // 3. Extract strings from return index configuration layout: [gr.Image, gr.Textbox]
+                // 3. Extract the text message string located at output tuple index position [1]
                 const modelStatusString = response.data[1]; 
 
                 // Pull away loading overlay animation layer
@@ -131,7 +131,7 @@
             } catch (error) {
                 console.error("Hugging Face API Pipeline Processing Fault: ", error);
                 loadingOverlay.classList.add('hidden');
-                statusBadge.textContent = "❌ Connection Failed. Check Hugging Face Space instance availability status.";
+                statusBadge.textContent = `❌ Pipeline Error: ${error.message || error}`;
                 statusBadge.className = "w-full p-3 rounded-xl border border-rose-500/20 bg-rose-500/5 text-rose-400 font-mono text-center text-xs font-bold shadow-lg shadow-rose-500/5";
             }
         });
