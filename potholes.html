@@ -19,7 +19,7 @@
             <div class="text-3xl p-3 bg-indigo-500/10 border border-indigo-500/20 rounded-xl shadow-lg shadow-indigo-500/5">🕳️</div>
             <div>
                 <h2 class="text-2xl font-black text-white tracking-wide">Heuristic Pothole Surveyor Matrix</h2>
-                <p class="text-xs text-slate-400 mt-0.5 font-mono text-indigo-400/80">Direct HTTP JSON Bridge: asrcoddeploy/pothole-detector-advanced</p>
+                <p class="text-xs text-slate-400 mt-0.5 font-mono text-indigo-400/80">Direct Event-Stream Queue Bridge: asrcoddeploy/pothole-detector-advanced</p>
             </div>
         </div>
 
@@ -63,8 +63,8 @@
 
                 <div id="loadingOverlay" class="hidden absolute inset-0 bg-[#030712]/95 flex flex-col items-center justify-center gap-3 transition-all duration-300 radar-scan-line">
                     <div class="w-6 h-6 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
-                    <span class="text-[9px] font-mono tracking-widest text-indigo-400 animate-pulse text-center max-w-xs uppercase leading-relaxed">
-                        Querying Hugging Face Python Layer... Executing YOLO Inference
+                    <span id="loadingText" class="text-[9px] font-mono tracking-widest text-indigo-400 animate-pulse text-center max-w-xs uppercase leading-relaxed">
+                        Joining active execution queue channel...
                     </span>
                 </div>
             </div>
@@ -82,70 +82,81 @@
         const statusBadge = document.getElementById('statusBadge');
         const vacantPlaceholder = document.getElementById('vacantPlaceholder');
         const loadingOverlay = document.getElementById('loadingOverlay');
+        const loadingText = document.getElementById('loadingText');
 
-        // Dynamic slider value rendering panel
         confSlider.addEventListener('input', (e) => {
             sliderLabel.textContent = parseFloat(e.target.value).toFixed(2);
         });
 
-        // Frame ingestion handler converting binary files to pure JSON string text data
         fileInput.addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (!file) return;
 
-            // Generate temporary local URI blob link for instant dashboard UI preview
             imagePreview.src = URL.createObjectURL(file);
             vacantPlaceholder.classList.add('hidden');
             previewContainer.classList.remove('hidden');
             loadingOverlay.classList.remove('hidden');
+            loadingText.textContent = "Joining active execution queue channel...";
 
-            // Initialize the Base64 background string encoder stream
             const reader = new FileReader();
             reader.readAsDataURL(file);
             
             reader.onload = async () => {
-                const base64DataUrl = reader.result; // Complete data URL token containing file body
+                const base64DataUrl = reader.result;
 
                 try {
-                    // Direct programmatic HTTP POST call bypassing cross-origin file upload blocks entirely
-                    const apiEndpointResponse = await fetch("https://asrcoddeploy-pothole-detector-advanced.hf.space/api/predict", {
+                    // STEP 1: Submit parameter data arrays to join the processing queue slot
+                    const queueSubmitResponse = await fetch("https://asrcoddeploy-pothole-detector-advanced.hf.space/gradio_api/call/detect_potholes", {
                         method: "POST",
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
+                        headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({
                             data: [
-                                base64DataUrl,               // Argument 1: Base64 formatted string maps to your image
-                                parseFloat(confSlider.value) // Argument 2: Float metric maps to your threshold boundary
-                            ],
-                            api_name: "/detect_potholes"
+                                base64DataUrl,               // Element [0]: Target pavement image matching Python schema
+                                parseFloat(confSlider.value) // Element [1]: Numeric confidence float threshold
+                            ]
                         })
                     });
 
-                    if (!apiEndpointResponse.ok) {
-                        throw new Error(`Server network layer returned status status code ${apiEndpointResponse.status}`);
+                    if (!queueSubmitResponse.ok) {
+                        throw new Error(`Queue submission rejected with status code ${queueSubmitResponse.status}`);
                     }
 
-                    const jsonPayloadPayload = await apiEndpointResponse.json();
+                    const queueData = await queueSubmitResponse.json();
+                    const eventId = queueData.event_id; // Secure unique event tracking token
                     
-                    // Extract your status text payload located at index position [1] of your python return signature
-                    const modelStatusString = jsonPayloadPayload.data[1];
+                    loadingText.textContent = "Handshake locked. Streaming computed matrix layers...";
 
-                    // Wipe out loading indicator mask
-                    loadingOverlay.classList.add('hidden');
-                    statusBadge.className = "w-full p-3 rounded-xl border font-mono text-center text-xs font-bold transition-all duration-300 ";
+                    // STEP 2: Establish connection to the server-side event tracking stream
+                    const streamUrl = `https://asrcoddeploy-pothole-detector-advanced.hf.space/gradio_api/call/detect_potholes/${eventId}`;
+                    const eventSource = new EventSource(streamUrl);
 
-                    // Evaluate string expressions returned by your model to update system colors dynamically
-                    if (modelStatusString.includes("safe")) {
-                        statusBadge.textContent = modelStatusString;
-                        statusBadge.classList.add('bg-emerald-500/5', 'border-emerald-500/10', 'text-emerald-400');
-                    } else {
-                        statusBadge.textContent = modelStatusString;
-                        statusBadge.classList.add('bg-amber-500/5', 'border-amber-500/10', 'text-amber-400');
-                    }
+                    // Listen exclusively for the standard finished calculation channel flag
+                    eventSource.addEventListener('complete', (event) => {
+                        const parsedPayload = JSON.parse(event.data);
+                        const modelStatusString = parsedPayload[1]; // Index 1 isolates your text alert message
+
+                        // Disengage stream hooks and clean layout view masks
+                        eventSource.close();
+                        loadingOverlay.classList.add('hidden');
+                        statusBadge.className = "w-full p-3 rounded-xl border font-mono text-center text-xs font-bold transition-all duration-300 ";
+
+                        if (modelStatusString.includes("safe")) {
+                            statusBadge.textContent = modelStatusString;
+                            statusBadge.classList.add('bg-emerald-500/5', 'border-emerald-500/10', 'text-emerald-400');
+                        } else {
+                            statusBadge.textContent = modelStatusString;
+                            statusBadge.classList.add('bg-amber-500/5', 'border-amber-500/10', 'text-amber-400');
+                        }
+                    });
+
+                    // Connection error monitoring fail-safes
+                    eventSource.addEventListener('error', (event) => {
+                        eventSource.close();
+                        throw new Error("Handshake connection loop dropped unexpectedly during inference.");
+                    });
 
                 } catch (error) {
-                    console.error("Hugging Face API Native Processing Exception: ", error);
+                    console.error("Pipeline Exception: ", error);
                     loadingOverlay.classList.add('hidden');
                     statusBadge.textContent = `❌ API Pipeline Fault: ${error.message || error}`;
                     statusBadge.className = "w-full p-3 rounded-xl border border-rose-500/20 bg-rose-500/5 text-rose-400 font-mono text-center text-xs font-bold shadow-lg shadow-rose-500/5";
