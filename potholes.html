@@ -105,14 +105,19 @@
                 const base64DataUrl = reader.result;
 
                 try {
-                    // STEP 1: Submit parameter data arrays to join the processing queue slot
+                    // STEP 1: Submit data wrapped in a schema that Gradio understands
                     const queueSubmitResponse = await fetch("https://asrcoddeploy-pothole-detector-advanced.hf.space/gradio_api/call/detect_potholes", {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({
                             data: [
-                                base64DataUrl,               // Element [0]: Target pavement image matching Python schema
-                                parseFloat(confSlider.value) // Element [1]: Numeric confidence float threshold
+                                {
+                                    "data": base64DataUrl,
+                                    "orig_name": file.name || "snapshot.jpg",
+                                    "mime_type": file.type || "image/jpeg",
+                                    "meta": { "_type": "gradio.FileData" }
+                                },
+                                parseFloat(confSlider.value) // Element [1]: Confidence float
                             ]
                         })
                     });
@@ -122,7 +127,7 @@
                     }
 
                     const queueData = await queueSubmitResponse.json();
-                    const eventId = queueData.event_id; // Secure unique event tracking token
+                    const eventId = queueData.event_id;
                     
                     loadingText.textContent = "Handshake locked. Streaming computed matrix layers...";
 
@@ -130,29 +135,34 @@
                     const streamUrl = `https://asrcoddeploy-pothole-detector-advanced.hf.space/gradio_api/call/detect_potholes/${eventId}`;
                     const eventSource = new EventSource(streamUrl);
 
-                    // Listen exclusively for the standard finished calculation channel flag
+                    // Production streaming complete listener
                     eventSource.addEventListener('complete', (event) => {
-                        const parsedPayload = JSON.parse(event.data);
-                        const modelStatusString = parsedPayload[1]; // Index 1 isolates your text alert message
+                        try {
+                            const parsedPayload = JSON.parse(event.data);
+                            const modelStatusString = parsedPayload[1]; // Isolate your text alert message
 
-                        // Disengage stream hooks and clean layout view masks
-                        eventSource.close();
-                        loadingOverlay.classList.add('hidden');
-                        statusBadge.className = "w-full p-3 rounded-xl border font-mono text-center text-xs font-bold transition-all duration-300 ";
+                            eventSource.close();
+                            loadingOverlay.classList.add('hidden');
+                            statusBadge.className = "w-full p-3 rounded-xl border font-mono text-center text-xs font-bold transition-all duration-300 ";
 
-                        if (modelStatusString.includes("safe")) {
-                            statusBadge.textContent = modelStatusString;
-                            statusBadge.classList.add('bg-emerald-500/5', 'border-emerald-500/10', 'text-emerald-400');
-                        } else {
-                            statusBadge.textContent = modelStatusString;
-                            statusBadge.classList.add('bg-amber-500/5', 'border-amber-500/10', 'text-amber-400');
+                            if (modelStatusString.includes("safe")) {
+                                statusBadge.textContent = modelStatusString;
+                                statusBadge.classList.add('bg-emerald-500/5', 'border-emerald-500/10', 'text-emerald-400');
+                            } else {
+                                statusBadge.textContent = modelStatusString;
+                                statusBadge.classList.add('bg-amber-500/5', 'border-amber-500/10', 'text-amber-400');
+                            }
+                        } catch (innerError) {
+                            console.error("Payload breakdown parsing exception:", innerError);
                         }
                     });
 
-                    // Connection error monitoring fail-safes
+                    // Server-side processing failure capture module
                     eventSource.addEventListener('error', (event) => {
                         eventSource.close();
-                        throw new Error("Handshake connection loop dropped unexpectedly during inference.");
+                        loadingOverlay.classList.add('hidden');
+                        statusBadge.textContent = "❌ Pipeline Error: Stream closed or connection interrupted.";
+                        statusBadge.className = "w-full p-3 rounded-xl border border-rose-500/20 bg-rose-500/5 text-rose-400 font-mono text-center text-xs font-bold shadow-lg";
                     });
 
                 } catch (error) {
