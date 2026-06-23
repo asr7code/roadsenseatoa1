@@ -74,8 +74,8 @@
     </div>
 
     <script type="module">
-        // Connects to the official modular distribution layout using clear JS packaging tracks
-        import { Client, handle_file } from "https://cdn.jsdelivr.net/npm/@gradio/client/dist/index.min.js";
+        // Import only the core Client runner from the browser package bundle
+        import { Client } from "https://cdn.jsdelivr.net/npm/@gradio/client/dist/index.min.js";
 
         const confSlider = document.getElementById('confSlider');
         const sliderLabel = document.getElementById('sliderLabel');
@@ -103,16 +103,16 @@
             loadingOverlay.classList.remove('hidden');
 
             try {
-                // 1. Establish real-time query lane to your updated space address
+                // 1. Establish the cloud handshake lane to your advanced space handle
                 const apiPipeline = await Client.connect("asrcoddeploy/pothole-detector-advanced");
                 
-                // 2. Wrap file inside native handler to upload chunks to Hugging Face before compilation runs
-                const response = await apiPipeline.predict("/detect_potholes", {
-                    image: handle_file(file),                    // Prepares your file block for HTTP parsing loops
-                    conf_threshold: parseFloat(confSlider.value) // Injects your confidence boundary criteria
-                });
+                // 2. Feed parameters inside a flat positional array [image, threshold] matching your app.py inputs order
+                const response = await apiPipeline.predict("/detect_potholes", [
+                    file,                        // Index 0: Raw browser file blob maps directly to 'image'
+                    parseFloat(confSlider.value) // Index 1: Float boundary maps directly to 'conf_threshold'
+                ]);
 
-                // 3. Extract the text string response located at index [1] of your tuple
+                // 3. Extract the prediction alert text payload sitting at tuple index 1
                 const modelStatusString = response.data[1]; 
 
                 // Pull away loading overlay animation layer
