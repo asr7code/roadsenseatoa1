@@ -19,7 +19,7 @@
             <div class="text-3xl p-3 bg-indigo-500/10 border border-indigo-500/20 rounded-xl shadow-lg shadow-indigo-500/5">🕳️</div>
             <div>
                 <h2 class="text-2xl font-black text-white tracking-wide">Heuristic Pothole Surveyor Matrix</h2>
-                <p class="text-xs text-slate-400 mt-0.5 font-mono text-indigo-400/80">Active Live Bridge Target: asrcoddeploy/pothole-detector-advanced (/detect_potholes)</p>
+                <p class="text-xs text-slate-400 mt-0.5 font-mono text-indigo-400/80">Direct HTTP JSON Bridge: asrcoddeploy/pothole-detector-advanced</p>
             </div>
         </div>
 
@@ -73,10 +73,7 @@
 
     </div>
 
-    <script type="module">
-        // Import only the core Client runner from the browser package bundle
-        import { Client } from "https://cdn.jsdelivr.net/npm/@gradio/client/dist/index.min.js";
-
+    <script>
         const confSlider = document.getElementById('confSlider');
         const sliderLabel = document.getElementById('sliderLabel');
         const fileInput = document.getElementById('fileInput');
@@ -86,54 +83,74 @@
         const vacantPlaceholder = document.getElementById('vacantPlaceholder');
         const loadingOverlay = document.getElementById('loadingOverlay');
 
-        // Dynamic slider parameter updating readout
+        // Dynamic slider value rendering panel
         confSlider.addEventListener('input', (e) => {
             sliderLabel.textContent = parseFloat(e.target.value).toFixed(2);
         });
 
-        // Watcher triggering payload transfer on item selection
-        fileInput.addEventListener('change', async (e) => {
+        // Frame ingestion handler converting binary files to pure JSON string text data
+        fileInput.addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (!file) return;
 
-            // Render interface canvas previews and mask the loading console block
+            // Generate temporary local URI blob link for instant dashboard UI preview
             imagePreview.src = URL.createObjectURL(file);
             vacantPlaceholder.classList.add('hidden');
             previewContainer.classList.remove('hidden');
             loadingOverlay.classList.remove('hidden');
 
-            try {
-                // 1. Establish the cloud handshake lane to your advanced space handle
-                const apiPipeline = await Client.connect("asrcoddeploy/pothole-detector-advanced");
-                
-                // 2. Feed parameters inside a flat positional array [image, threshold] matching your app.py inputs order
-                const response = await apiPipeline.predict("/detect_potholes", [
-                    file,                        // Index 0: Raw browser file blob maps directly to 'image'
-                    parseFloat(confSlider.value) // Index 1: Float boundary maps directly to 'conf_threshold'
-                ]);
+            // Initialize the Base64 background string encoder stream
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            
+            reader.onload = async () => {
+                const base64DataUrl = reader.result; // Complete data URL token containing file body
 
-                // 3. Extract the prediction alert text payload sitting at tuple index 1
-                const modelStatusString = response.data[1]; 
+                try {
+                    // Direct programmatic HTTP POST call bypassing cross-origin file upload blocks entirely
+                    const apiEndpointResponse = await fetch("https://asrcoddeploy-pothole-detector-advanced.hf.space/api/predict", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            data: [
+                                base64DataUrl,               // Argument 1: Base64 formatted string maps to your image
+                                parseFloat(confSlider.value) // Argument 2: Float metric maps to your threshold boundary
+                            ],
+                            api_name: "/detect_potholes"
+                        })
+                    });
 
-                // Pull away loading overlay animation layer
-                loadingOverlay.classList.add('hidden');
-                statusBadge.className = "w-full p-3 rounded-xl border font-mono text-center text-xs font-bold transition-all duration-300 ";
+                    if (!apiEndpointResponse.ok) {
+                        throw new Error(`Server network layer returned status status code ${apiEndpointResponse.status}`);
+                    }
 
-                // Evaluate string signatures inside your python logic block rules to toggle UI coloring styles
-                if (modelStatusString.includes("safe")) {
-                    statusBadge.textContent = modelStatusString;
-                    statusBadge.classList.add('bg-emerald-500/5', 'border-emerald-500/10', 'text-emerald-400');
-                } else {
-                    statusBadge.textContent = modelStatusString;
-                    statusBadge.classList.add('bg-amber-500/5', 'border-amber-500/10', 'text-amber-400');
+                    const jsonPayloadPayload = await apiEndpointResponse.json();
+                    
+                    // Extract your status text payload located at index position [1] of your python return signature
+                    const modelStatusString = jsonPayloadPayload.data[1];
+
+                    // Wipe out loading indicator mask
+                    loadingOverlay.classList.add('hidden');
+                    statusBadge.className = "w-full p-3 rounded-xl border font-mono text-center text-xs font-bold transition-all duration-300 ";
+
+                    // Evaluate string expressions returned by your model to update system colors dynamically
+                    if (modelStatusString.includes("safe")) {
+                        statusBadge.textContent = modelStatusString;
+                        statusBadge.classList.add('bg-emerald-500/5', 'border-emerald-500/10', 'text-emerald-400');
+                    } else {
+                        statusBadge.textContent = modelStatusString;
+                        statusBadge.classList.add('bg-amber-500/5', 'border-amber-500/10', 'text-amber-400');
+                    }
+
+                } catch (error) {
+                    console.error("Hugging Face API Native Processing Exception: ", error);
+                    loadingOverlay.classList.add('hidden');
+                    statusBadge.textContent = `❌ API Pipeline Fault: ${error.message || error}`;
+                    statusBadge.className = "w-full p-3 rounded-xl border border-rose-500/20 bg-rose-500/5 text-rose-400 font-mono text-center text-xs font-bold shadow-lg shadow-rose-500/5";
                 }
-
-            } catch (error) {
-                console.error("Hugging Face API Pipeline Processing Fault: ", error);
-                loadingOverlay.classList.add('hidden');
-                statusBadge.textContent = `❌ Pipeline Error: ${error.message || error}`;
-                statusBadge.className = "w-full p-3 rounded-xl border border-rose-500/20 bg-rose-500/5 text-rose-400 font-mono text-center text-xs font-bold shadow-lg shadow-rose-500/5";
-            }
+            };
         });
     </script>
 </body>
