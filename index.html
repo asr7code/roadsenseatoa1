@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
-    <title>RoadSense : ATOA Master Control Command Center</title>
+    <title>RoadSense : ATOA Command Center</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body class="bg-[#030712] text-slate-100 min-h-screen selection:bg-rose-500/30 selection:text-rose-400">
 
@@ -22,98 +23,98 @@
             <h1 class="text-4xl md:text-6xl font-black tracking-tight text-white mb-4">
                 ROADSENSE <span class="bg-gradient-to-r from-rose-500 via-purple-500 to-indigo-500 bg-clip-text text-transparent">: ATOA</span>
             </h1>
-            <p class="text-sm md:text-base text-slate-400 max-w-2xl mx-auto font-medium">
-                A unified multi-component platform delivering software-based driver assistance modules, live behavioral monitoring, and crowd-sourced safety grids.
+            <p class="text-sm text-slate-400 max-w-2xl mx-auto font-medium leading-relaxed">
+                A unified computer vision dashboard delivering real-time passenger cabin monitoring, external hazard telemetry, and crowd-sourced crash beacon arrays.
             </p>
         </header>
 
-        <section class="mb-16">
+        <section class="mb-16 animate__animated animate__fadeIn animate__delay-1s">
             <div class="flex items-center gap-2 mb-6 border-b border-slate-900 pb-3">
-                <span class="text-xs font-mono font-black text-indigo-400 tracking-widest uppercase">INTEGRATED MODULES</span>
-                <span class="text-[10px] bg-indigo-500/10 border border-indigo-500/20 px-2 py-0.5 rounded text-indigo-400 font-bold font-mono">HF BACKEND API</span>
+                <span class="text-xs font-mono font-black text-indigo-400 tracking-widest uppercase">INTEGRATED API LAYERS</span>
+                <span class="text-[10px] bg-indigo-500/10 border border-indigo-500/20 px-2 py-0.5 rounded text-indigo-400 font-bold font-mono">STAYS ON SITE</span>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 
-                <a href="potholes.html" class="group bg-slate-900/20 border border-slate-900 hover:border-indigo-500/30 rounded-2xl p-6 transition-all duration-300 backdrop-blur-xl hover:shadow-xl hover:shadow-indigo-500/[0.02] flex flex-col justify-between min-h-[200px]">
+                <a href="potholes.html" class="glass-card rounded-2xl p-6 flex flex-col justify-between min-h-[220px] group">
                     <div>
                         <div class="text-2xl mb-4 group-hover:scale-110 transition-transform duration-300 w-fit">🕳️</div>
                         <h3 class="text-base font-bold text-white group-hover:text-indigo-400 transition-colors">Pothole Surveyor</h3>
-                        <p class="text-xs text-slate-400 mt-2 line-clamp-3 leading-relaxed">Runs YOLOv8 network models behind the scenes to analyze infrastructure parameters without bounding boxes.</p>
+                        <p class="text-xs text-slate-400 mt-2 leading-relaxed">Streams verification frames directly to YOLOv8 weights to evaluate structural road anomalies in clean output mode.</p>
                     </div>
-                    <span class="text-[10px] font-mono font-bold text-indigo-400 tracking-wider uppercase mt-4">Process In-Site →</span>
+                    <span class="text-[10px] font-mono font-bold text-indigo-400 tracking-wider uppercase mt-4 block">Open In-Portal Dashboard →</span>
                 </a>
 
-                <a href="drowsiness.html" class="group bg-slate-900/20 border border-slate-900 hover:border-indigo-500/30 rounded-2xl p-6 transition-all duration-300 backdrop-blur-xl hover:shadow-xl hover:shadow-indigo-500/[0.02] flex flex-col justify-between min-h-[200px]">
+                <a href="drowsiness.html" class="glass-card rounded-2xl p-6 flex flex-col justify-between min-h-[220px] group">
                     <div>
                         <div class="text-2xl mb-4 group-hover:scale-110 transition-transform duration-300 w-fit">👁️‍🗨️</div>
                         <h3 class="text-base font-bold text-white group-hover:text-indigo-400 transition-colors">Drowsiness Guard</h3>
-                        <p class="text-xs text-slate-400 mt-2 line-clamp-3 leading-relaxed">Tracks Eye Aspect Ratio (EAR) and Mouth Aspect Ratio (MAR) metrics via MediaPipe facial tracking analysis.</p>
+                        <p class="text-xs text-slate-400 mt-2 leading-relaxed">Monitors driver fatigue cycles by processing real-time EAR and MAR analytics via internal MediaPipe face meshes.</p>
                     </div>
-                    <span class="text-[10px] font-mono font-bold text-indigo-400 tracking-wider uppercase mt-4">Process In-Site →</span>
+                    <span class="text-[10px] font-mono font-bold text-indigo-400 tracking-wider uppercase mt-4 block">Open In-Portal Dashboard →</span>
                 </a>
 
-                <a href="emergency.html" class="group bg-slate-900/20 border border-slate-900 hover:border-indigo-500/30 rounded-2xl p-6 transition-all duration-300 backdrop-blur-xl hover:shadow-xl hover:shadow-indigo-500/[0.02] flex flex-col justify-between min-h-[200px]">
+                <a href="emergency.html" class="glass-card rounded-2xl p-6 flex flex-col justify-between min-h-[220px] group">
                     <div>
                         <div class="text-2xl mb-4 group-hover:scale-110 transition-transform duration-300 w-fit">🚨</div>
-                        <h3 class="text-base font-bold text-white group-hover:text-indigo-400 transition-colors">Emergency Siren Matrix</h3>
-                        <p class="text-xs text-slate-400 mt-2 line-clamp-3 leading-relaxed">Identifies ambulances and fire trucks using fine-tuned YOLOv8 Nano frames combined with HSV masking.</p>
+                        <h3 class="text-base font-bold text-white group-hover:text-indigo-400 transition-colors">Siren Light Matrix</h3>
+                        <p class="text-xs text-slate-400 mt-2 leading-relaxed">Detects approaching emergency vehicles using custom-engineered YOLOv8 Nano classifiers and color masking algorithms.</p>
                     </div>
-                    <span class="text-[10px] font-mono font-bold text-indigo-400 tracking-wider uppercase mt-4">Process In-Site →</span>
+                    <span class="text-[10px] font-mono font-bold text-indigo-400 tracking-wider uppercase mt-4 block">Open In-Portal Dashboard →</span>
                 </a>
 
-                <a href="lane.html" class="group bg-slate-900/20 border border-slate-900 hover:border-indigo-500/30 rounded-2xl p-6 transition-all duration-300 backdrop-blur-xl hover:shadow-xl hover:shadow-indigo-500/[0.02] flex flex-col justify-between min-h-[200px]">
+                <a href="lane.html" class="glass-card rounded-2xl p-6 flex flex-col justify-between min-h-[220px] group">
                     <div>
                         <div class="text-2xl mb-4 group-hover:scale-110 transition-transform duration-300 w-fit">🛣️</div>
-                        <h3 class="text-base font-bold text-white group-hover:text-indigo-400 transition-colors">U-Net Lane Tracker</h3>
-                        <p class="text-xs text-slate-400 mt-2 line-clamp-3 leading-relaxed">Executes PyTorch semantic road segmentation loops over vehicle dashboard camera feeds to calculate trajectory metrics.</p>
+                        <h3 class="text-base font-bold text-white group-hover:text-indigo-400 transition-colors">U-Net Lane Segmenter</h3>
+                        <p class="text-xs text-slate-400 mt-2 leading-relaxed">Computes binary road segmentation matrices using deep U-Net wrappers to trigger warning timers on vehicle drift errors.</p>
                     </div>
-                    <span class="text-[10px] font-mono font-bold text-indigo-400 tracking-wider uppercase mt-4">Process In-Site →</span>
+                    <span class="text-[10px] font-mono font-bold text-indigo-400 tracking-wider uppercase mt-4 block">Open In-Portal Dashboard →</span>
                 </a>
 
             </div>
         </section>
 
-        <section>
+        <section class="animate__animated animate__fadeIn animate__delay-1s">
             <div class="flex items-center gap-2 mb-6 border-b border-slate-900 pb-3">
-                <span class="text-xs font-mono font-black text-rose-400 tracking-widest uppercase">EXTERNAL GATEWAYS & NATIVE TARGETS</span>
-                <span class="text-[10px] bg-rose-500/10 border border-rose-500/20 px-2 py-0.5 rounded text-rose-400 font-bold font-mono">REDIRECTION ACTIVE</span>
+                <span class="text-xs font-mono font-black text-rose-400 tracking-widest uppercase">EXTERNAL TELEMETRY NETWORKS</span>
+                <span class="text-[10px] bg-rose-500/10 border border-rose-500/20 px-2 py-0.5 rounded text-rose-400 font-bold font-mono">EXTERNAL LINK ACTIVE</span>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 
-                <a href="https://beautiful-kleicha-da7ffd.netlify.app/" target="_blank" class="group bg-slate-900/10 border border-slate-900 hover:border-rose-500/30 rounded-2xl p-6 transition-all duration-300 backdrop-blur-xl hover:shadow-xl hover:shadow-rose-500/[0.01] flex flex-col justify-between min-h-[180px]">
+                <a href="https://beautiful-kleicha-da7ffd.netlify.app/" target="_blank" class="glass-card rounded-2xl p-6 flex flex-col justify-between min-h-[180px] group">
                     <div>
                         <div class="flex justify-between items-start">
                             <div class="text-2xl mb-4 group-hover:rotate-12 transition-transform duration-300">📡</div>
-                            <span class="text-[9px] bg-rose-500/10 px-2 py-0.5 rounded font-mono font-bold text-rose-400 border border-rose-500/20 uppercase">NETLIFY RE-ROUTE</span>
+                            <span class="text-[9px] bg-rose-500/10 px-2 py-0.5 rounded font-mono font-bold text-rose-400 border border-rose-500/20 uppercase">NETLIFY GATEWAY</span>
                         </div>
                         <h3 class="text-base font-bold text-white group-hover:text-rose-400 transition-colors">Cloud Crash Beacon</h3>
-                        <p class="text-xs text-slate-400 mt-2 leading-relaxed">Crowd-sourced Vehicle-to-Cloud (V2C) layout mapping browser accelerometer spikes to Firebase nodes.</p>
+                        <p class="text-xs text-slate-400 mt-2 leading-relaxed">Crowd-sourced multi-vehicle safety grid streaming high-impact accelerometer data to live cloud loops.</p>
                     </div>
-                    <span class="text-[10px] font-mono font-bold text-rose-400 tracking-wider uppercase mt-4 flex items-center gap-1">Launch External Gateway ↗</span>
+                    <span class="text-[10px] font-mono font-bold text-rose-400 tracking-wider uppercase mt-4 flex items-center gap-1">Launch External Console ↗</span>
                 </a>
 
-                <a href="https://obj2sim-fgj5alpczwcdgk4aghtfsa.streamlit.app/" target="_blank" class="group bg-slate-900/10 border border-slate-900 hover:border-rose-500/30 rounded-2xl p-6 transition-all duration-300 backdrop-blur-xl hover:shadow-xl hover:shadow-rose-500/[0.01] flex flex-col justify-between min-h-[180px]">
+                <a href="https://obj2sim-fgj5alpczwcdgk4aghtfsa.streamlit.app/" target="_blank" class="glass-card rounded-2xl p-6 flex flex-col justify-between min-h-[180px] group">
                     <div>
                         <div class="flex justify-between items-start">
                             <div class="text-2xl mb-4 group-hover:rotate-12 transition-transform duration-300">🚦</div>
-                            <span class="text-[9px] bg-rose-500/10 px-2 py-0.5 rounded font-mono font-bold text-rose-400 border border-rose-500/20 uppercase">STREAMLIT RE-ROUTE</span>
+                            <span class="text-[9px] bg-rose-500/10 px-2 py-0.5 rounded font-mono font-bold text-rose-400 border border-rose-500/20 uppercase">STREAMLIT GATEWAY</span>
                         </div>
-                        <h3 class="text-base font-bold text-white group-hover:text-rose-400 transition-colors">Intersectional Speed Advisor</h3>
-                        <p class="text-xs text-slate-400 mt-2 leading-relaxed">Predicts municipal intersection countdown phases to provide advisory velocity profiles.</p>
+                        <h3 class="text-base font-bold text-white group-hover:text-rose-400 transition-colors">Velocity Advisor Suite</h3>
+                        <p class="text-xs text-slate-400 mt-2 leading-relaxed">Tracks municipal junction timelines to recommend cruising profiles and optimize deceleration logic.</p>
                     </div>
-                    <span class="text-[10px] font-mono font-bold text-rose-400 tracking-wider uppercase mt-4 flex items-center gap-1">Launch External Gateway ↗</span>
+                    <span class="text-[10px] font-mono font-bold text-rose-400 tracking-wider uppercase mt-4 flex items-center gap-1">Launch External Console ↗</span>
                 </a>
 
-                <a href="traffic-sign.html" class="group bg-slate-900/10 border border-slate-900 hover:border-emerald-500/30 rounded-2xl p-6 transition-all duration-300 backdrop-blur-xl hover:shadow-xl hover:shadow-emerald-500/[0.01] flex flex-col justify-between min-h-[180px]">
+                <a href="traffic-sign.html" class="glass-card rounded-2xl p-6 flex flex-col justify-between min-h-[180px] group">
                     <div>
                         <div class="flex justify-between items-start">
                             <div class="text-2xl mb-4 group-hover:translate-y-[-2px] transition-transform duration-300">🤖</div>
-                            <span class="text-[9px] bg-emerald-500/10 px-2 py-0.5 rounded font-mono font-bold text-emerald-400 border border-emerald-500/20 uppercase">Android Native</span>
+                            <span class="text-[9px] bg-emerald-500/10 px-2 py-0.5 rounded font-mono font-bold text-emerald-400 border border-emerald-500/20 uppercase">LOCAL DOWNLOAD</span>
                         </div>
-                        <h3 class="text-base font-bold text-white group-hover:text-emerald-400 transition-colors">Native Sign Identifier</h3>
-                        <p class="text-xs text-slate-400 mt-2 leading-relaxed">Download hub for the native compiled Kotlin APK driving internal real-time CameraX frame models.</p>
+                        <h3 class="text-base font-bold text-white group-hover:text-emerald-400 transition-colors">On-Device Sign Classifier</h3>
+                        <p class="text-xs text-slate-400 mt-2 leading-relaxed">Kotlin application utilizing hardware-native TensorFlow Lite engines and live background frame capturing hooks.</p>
                     </div>
                     <span class="text-[10px] font-mono font-bold text-emerald-400 tracking-wider uppercase mt-4 flex items-center gap-1">Open Download Hub →</span>
                 </a>
