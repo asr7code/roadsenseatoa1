@@ -66,53 +66,68 @@
 
     </div>
 
-    <script>
-        const confSlider = document.getElementById('confSlider');
-        const sliderLabel = document.getElementById('sliderLabel');
-        const fileInput = document.getElementById('fileInput');
-        const previewContainer = document.getElementById('previewContainer');
-        const imagePreview = document.getElementById('imagePreview');
-        const statusBadge = document.getElementById('statusBadge');
-        const vacantPlaceholder = document.getElementById('vacantPlaceholder');
-        const loadingOverlay = document.getElementById('loadingOverlay');
+    <script type="module">
+    import { Client } from "https://cdn.jsdelivr.net/npm/@gradio/client@latest/dist/index.min.js";
 
-        // Dynamic slider value rendering panel loop
-        confSlider.addEventListener('input', (e) => {
-            sliderLabel.textContent = parseFloat(e.target.value).toFixed(2);
-        });
+    const confSlider = document.getElementById('confSlider');
+    const sliderLabel = document.getElementById('sliderLabel');
+    const fileInput = document.getElementById('fileInput');
+    const previewContainer = document.getElementById('previewContainer');
+    const imagePreview = document.getElementById('imagePreview');
+    const statusBadge = document.getElementById('statusBadge');
+    const vacantPlaceholder = document.getElementById('vacantPlaceholder');
+    const loadingOverlay = document.getElementById('loadingOverlay');
 
-        // Frame ingestion handler
-        fileInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (!file) return;
+    // Sync slider number adjustments dynamically
+    confSlider.addEventListener('input', (e) => {
+        sliderLabel.textContent = parseFloat(e.target.value).toFixed(2);
+    });
 
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                // Populate visuals
-                imagePreview.src = event.target.result;
-                vacantPlaceholder.classList.add('hidden');
-                previewContainer.classList.remove('hidden');
-                loadingOverlay.classList.remove('hidden');
+    // Ingestion pipeline trigger when a driver uploads a file
+    fileInput.addEventListener('change', async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
 
-                // Execute your exact heuristic rule logic parameters via simulation
-                // Once you configure your live space token webhooks, we can place the native fetch requests here!
-                setTimeout(() => {
-                    const mockBoxesFound = Math.random() > 0.5 ? 4 : 0;
-                    
-                    loadingOverlay.classList.add('hidden');
-                    statusBadge.className = "w-full p-3 rounded-lg border font-mono text-center text-xs font-bold transition-all duration-300 ";
-                    
-                    if (mockBoxesFound < 2) {
-                        statusBadge.textContent = "✅ Road looks safe! No potholes detected.";
-                        statusBadge.classList.add('bg-emerald-500/5', 'border-emerald-500/10', 'text-emerald-400');
-                    } else {
-                        statusBadge.textContent = "⚠️ Warning: Potholes Detected!";
-                        statusBadge.classList.add('bg-amber-500/5', 'border-amber-500/10', 'text-amber-400');
-                    }
-                }, 1400);
-            };
-            reader.readAsDataURL(file);
-        });
-    </script>
+        // Show layout previews and trigger your custom glassmorphism loader
+        imagePreview.src = URL.createObjectURL(file);
+        vacantPlaceholder.classList.add('hidden');
+        previewContainer.classList.remove('hidden');
+        loadingOverlay.classList.remove('hidden');
+
+        try {
+            // 2. Initialize connection straight to your existing Hugging Face backend slot
+            const app = await Client.connect("asrcoddeploy/obj3pot");
+            
+            // 3. Fire the processing payload over to your YOLO python script execution loop
+            const result = await app.predict("/predict", [
+                file, 	                  // gr.Image input
+                parseFloat(confSlider.value) // gr.Slider input
+            ]);
+
+            // 4. Extract data arrays returned from your gradio function array return structure:
+            // outputs=[gr.Image, gr.Textbox] -> index 0 is image, index 1 is text status
+            const returnedStatusText = result.data[1]; 
+
+            // Turn off loading animation mask
+            loadingOverlay.classList.add('hidden');
+            statusBadge.className = "w-full p-3 rounded-lg border font-mono text-center text-xs font-bold transition-all duration-300 ";
+
+            // Evaluate strings returned from your specific python script rules
+            if (returnedStatusText.includes("safe")) {
+                statusBadge.textContent = returnedStatusText;
+                statusBadge.classList.add('bg-emerald-500/5', 'border-emerald-500/10', 'text-emerald-400');
+            } else {
+                statusBadge.textContent = returnedStatusText;
+                statusBadge.classList.add('bg-amber-500/5', 'border-amber-500/10', 'text-amber-400');
+            }
+
+        } catch (error) {
+            console.error("Hugging Face API Error:", error);
+            loadingOverlay.classList.add('hidden');
+            statusBadge.textContent = "❌ Connection Failed. Check backend space status.";
+            statusBadge.className = "w-full p-3 rounded-lg border border-rose-500/20 bg-rose-500/5 text-rose-400 font-mono text-center text-xs font-bold";
+        }
+    });
+</script>
 </body>
 </html>
